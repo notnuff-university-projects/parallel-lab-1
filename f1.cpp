@@ -1,4 +1,5 @@
 #include "f1.h"
+#include <iostream>
 
 F1::F1(Data* data) : data(data) {}
 
@@ -35,4 +36,11 @@ void F1::execute() {
     for (int i = 0; i < data->N; ++i) {
         result[i] = BC + AB + C_B_MA_ME;
     }
+
+    // Виведення результату
+    std::cout << "\nРезультат F1 (вектор d):\n";
+    for (int i = 0; i < data->N; ++i) {
+        std::cout << "d[" << i << "] = " << result[i] << "\n";
+    }
+    std::cout << std::endl;
 }

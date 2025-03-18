@@ -1,4 +1,5 @@
 #include "f2.h"
+#include <iostream>
 
 F2::F2(Data* data) : data(data) {}
 
@@ -32,4 +33,14 @@ void F2::execute() {
             result[i][j] = MA_MGMZ[i][j] + ML_TRANS[i][j];
         }
     }
+
+    // Виведення результату
+    std::cout << "\nРезультат F2 (матриця MK):\n";
+    for (int i = 0; i < data->N; ++i) {
+        for (int j = 0; j < data->N; ++j) {
+            std::cout << "MK[" << i << "][" << j << "] = " << result[i][j] << "\t";
+        }
+        std::cout << "\n";
+    }
+    std::cout << std::endl;
 } 
