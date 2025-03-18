@@ -12,32 +12,31 @@
 
 #include <iostream>
 #include <stdexcept>
-
+#include <pthread.h>
 #include "data.h"
 
-int main() {
-    Data data;
 
+int main() {
     // Print the prompt to the user
-    std::cout << "Select mode: small number / big number (press [s] or [b]): ";
+    std::cout << "Оберіть режим: малі числа / великі числа (натисніть [s] або [b]): ";
 
     char input;
-    // Read the input character
     std::cin >> input;
 
-    // Validate the input
+    Mode dataMode;
     if (input == 's') {
-        std::cout << "Small number mode selected." << std::endl;
-        data.mode = Mode::SmallNum;
+        std::cout << "Обрано режим малих чисел (N=3)." << std::endl;
+        dataMode = Mode::SmallNum;
     } else if (input == 'b') {
-        data.mode = Mode::BigNum;
-        std::cout << "Big number mode selected." << std::endl;
+        dataMode = Mode::BigNum;
+        std::cout << "Обрано режим великих чисел (N=1000)." << std::endl;
     } else {
-        // Throw an error if input is not 's' or 'b'
-        throw std::invalid_argument("Invalid input. Please enter 's' or 'b'.");
+        throw std::invalid_argument("Невірний ввід. Будь ласка, введіть 's' або 'b'.");
     }
 
+    // Глобальний об'єкт даних для доступу з потоків
+    Data data(dataMode);
 
-
+    std::cout << "\nВсі потоки завершили роботу." << std::endl;
     return 0;
 }
