@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <limits>
+#include <pthread.h>
 
 Data::Data(Mode m) : mode(m), gen(rd()), dis(-100.0, 100.0) {
     if (mode == Mode::SmallNum) {
@@ -11,9 +12,14 @@ Data::Data(Mode m) : mode(m), gen(rd()), dis(-100.0, 100.0) {
     } else if (mode == Mode::BigNum) {
         N = 1000;
     }
+    // Ініціалізація мютексу
+    pthread_mutex_init(&inputMutex, nullptr);
 }
 
-Data::~Data() = default;
+Data::~Data() {
+    // Звільнення мютексу
+    pthread_mutex_destroy(&inputMutex);
+}
 
 // Скалярний добуток двох векторів
 double Data::vectorDotProduct(const std::vector<double>& a, const std::vector<double>& b) {
@@ -97,6 +103,10 @@ std::vector<std::vector<double>> Data::generateRandomMatrix() const {
 
 std::vector<double> Data::getVectorFromConsole(const std::string& vectorName) const {
     std::vector<double> result(N);
+    
+    // Захоплення мютексу перед введенням
+    pthread_mutex_lock(&inputMutex);
+    
     for (int i = 0; i < N; i++) {
         std::cout << "Введіть елемент " << vectorName << "[" << i << "]: ";
         while (!(std::cin >> result[i])) {
@@ -105,11 +115,19 @@ std::vector<double> Data::getVectorFromConsole(const std::string& vectorName) co
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
+    
+    // Звільнення мютексу після введення
+    pthread_mutex_unlock(&inputMutex);
+    
     return result;
 }
 
 std::vector<std::vector<double>> Data::getMatrixFromConsole(const std::string& matrixName) const {
     std::vector<std::vector<double>> result(N, std::vector<double>(N));
+    
+    // Захоплення мютексу перед введенням
+    pthread_mutex_lock(&inputMutex);
+    
     for (int i = 0; i < N; i++) {
         std::cout << "\nВведення рядка " << matrixName << "[" << i << "]:\n";
         for (int j = 0; j < N; j++) {
@@ -121,6 +139,10 @@ std::vector<std::vector<double>> Data::getMatrixFromConsole(const std::string& m
             }
         }
     }
+    
+    // Звільнення мютексу після введення
+    pthread_mutex_unlock(&inputMutex);
+    
     return result;
 }
 

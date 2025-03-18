@@ -13,8 +13,13 @@
 #include <iostream>
 #include <stdexcept>
 #include <pthread.h>
-#include "data.h"
+#include <chrono>
 
+#include "data.h"
+#include "f1.h"
+#include "f2.h"
+#include "f3.h"
+#include "f4.h"
 
 int main() {
     // Print the prompt to the user
@@ -37,6 +42,34 @@ int main() {
     // Глобальний об'єкт даних для доступу з потоків
     Data data(dataMode);
 
-    std::cout << "\nВсі потоки завершили роботу." << std::endl;
+    F1 f1(&data);
+    F2 f2(&data);
+    F3 f3(&data);
+    // F4 f4(&data);
+
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    f1.start();
+    f2.start();
+    f3.start();
+    // f4.start();
+
+    f1.join();
+    f2.join();
+    f3.join();
+    // f4.join();
+    std::cout << "\nAll threads completed their job" << std::endl;
+
+    // Вимірювання часу завершення
+    auto endTime = std::chrono::high_resolution_clock::now();
+
+    // Обчислення часу виконання в мілісекундах
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+
+
+    // Виведення результатів
+    std::cout << "\nLaboratory Work 1.3 Done";
+    std::cout << "\nExecutionTime: " << duration.count() << " ms" << std::endl;
+
     return 0;
 }

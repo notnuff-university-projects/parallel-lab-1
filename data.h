@@ -4,6 +4,7 @@
 #include <vector>
 #include <random>
 #include <string>
+#include <pthread.h>
 
 enum class Mode {
     SmallNum,  // N = 3
@@ -22,7 +23,6 @@ public:
     std::vector<std::vector<double>> transposeMatrix(const std::vector<std::vector<double>>& matrix);
     std::vector<double> sortVector(const std::vector<double>& vec);
 
-
     std::vector<double> getVector() const;
     std::vector<std::vector<double>> getMatrix() const;
 
@@ -37,11 +37,14 @@ public:
     Mode mode;
     int N;  // Розмір векторів та матриць
 
+    mutable pthread_mutex_t inputMutex;
 private:
     // Генератор випадкових чисел
     mutable std::random_device rd;
     mutable std::mt19937 gen;
     mutable std::uniform_real_distribution<double> dis;
+
+    // Мютекс для синхронізації вводу
 };
 
 #endif //DATA_H

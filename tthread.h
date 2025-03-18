@@ -23,7 +23,7 @@ protected:
 private:
     pthread_t thread;
     bool running;
-    
+
     // Статична функція для запуску потоку
     static void* threadFunction(void* arg);
 };

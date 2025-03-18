@@ -9,6 +9,10 @@ void F3::execute() {
     std::vector<std::vector<double>> MR, MS;
 
     if (data->N == 3) {
+        pthread_mutex_lock(&data->inputMutex);
+        std::cout << "\nВведення F3:\n";
+        pthread_mutex_unlock(&data->inputMutex);
+
         // Введення з клавіатури для малих розмірів
         P = data->getVectorFromConsole("P");
         MR = data->getMatrixFromConsole("MR");

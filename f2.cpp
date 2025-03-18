@@ -8,6 +8,10 @@ void F2::execute() {
     std::vector<std::vector<double>> MA, MG, MZ, ML;
 
     if (data->N == 3) {
+        pthread_mutex_lock(&data->inputMutex);
+        std::cout << "\nВведення F2:\n";
+        pthread_mutex_unlock(&data->inputMutex);
+
         // Введення з клавіатури для малих розмірів
         MA = data->getMatrixFromConsole("MA");
         MG = data->getMatrixFromConsole("MG");
