@@ -3,12 +3,25 @@
 F1::F1(Data* data) : data(data) {}
 
 void F1::execute() {
-    // Генерація векторів та матриць
-    std::vector<double> B = data->generateRandomVector();
-    std::vector<double> C = data->generateRandomVector();
-    std::vector<double> A = data->generateRandomVector();
-    std::vector<std::vector<double>> MA = data->generateRandomMatrix();
-    std::vector<std::vector<double>> ME = data->generateRandomMatrix();
+    // Генерація або введення векторів та матриць
+    std::vector<double> B, C, A;
+    std::vector<std::vector<double>> MA, ME;
+
+    if (data->N == 3) {
+        // Введення з клавіатури для малих розмірів
+        B = data->getVectorFromConsole("B");
+        C = data->getVectorFromConsole("C");
+        A = data->getVectorFromConsole("A");
+        MA = data->getMatrixFromConsole("MA");
+        ME = data->getMatrixFromConsole("ME");
+    } else {
+        // Випадкова генерація для великих розмірів
+        B = data->generateRandomVector();
+        C = data->generateRandomVector();
+        A = data->generateRandomVector();
+        MA = data->generateRandomMatrix();
+        ME = data->generateRandomMatrix();
+    }
 
     // F1: d = (B*C) + (A*B) +(C*(B*(MA*ME)))
     double BC = data->vectorDotProduct(B, C);

@@ -3,10 +3,21 @@
 F3::F3(Data* data) : data(data) {}
 
 void F3::execute() {
-    // Генерація вектора та матриць
-    std::vector<double> P = data->generateRandomVector();
-    std::vector<std::vector<double>> MR = data->generateRandomMatrix();
-    std::vector<std::vector<double>> MS = data->generateRandomMatrix();
+    // Генерація або введення вектора та матриць
+    std::vector<double> P;
+    std::vector<std::vector<double>> MR, MS;
+
+    if (data->N == 3) {
+        // Введення з клавіатури для малих розмірів
+        P = data->getVectorFromConsole("P");
+        MR = data->getMatrixFromConsole("MR");
+        MS = data->getMatrixFromConsole("MS");
+    } else {
+        // Випадкова генерація для великих розмірів
+        P = data->generateRandomVector();
+        MR = data->generateRandomMatrix();
+        MS = data->generateRandomMatrix();
+    }
 
     // F3: O = SORT(P)*(MR * MS)
     auto sorted_P = data->sortVector(P);

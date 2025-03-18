@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
+#include <limits>
 
 Data::Data(Mode m) : mode(m), gen(rd()), dis(-100.0, 100.0) {
     if (mode == Mode::SmallNum) {
@@ -92,5 +93,34 @@ std::vector<std::vector<double>> Data::generateRandomMatrix() const {
         }
     }
     return matrix;
+}
+
+std::vector<double> Data::getVectorFromConsole(const std::string& vectorName) const {
+    std::vector<double> result(N);
+    for (int i = 0; i < N; i++) {
+        std::cout << "Введіть елемент " << vectorName << "[" << i << "]: ";
+        while (!(std::cin >> result[i])) {
+            std::cout << "Помилка! Введіть число: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    return result;
+}
+
+std::vector<std::vector<double>> Data::getMatrixFromConsole(const std::string& matrixName) const {
+    std::vector<std::vector<double>> result(N, std::vector<double>(N));
+    for (int i = 0; i < N; i++) {
+        std::cout << "\nВведення рядка " << matrixName << "[" << i << "]:\n";
+        for (int j = 0; j < N; j++) {
+            std::cout << "Введіть елемент " << matrixName << "[" << i << "][" << j << "]: ";
+            while (!(std::cin >> result[i][j])) {
+                std::cout << "Помилка! Введіть число: ";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+        }
+    }
+    return result;
 }
 

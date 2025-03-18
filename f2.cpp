@@ -3,11 +3,22 @@
 F2::F2(Data* data) : data(data) {}
 
 void F2::execute() {
-    // Генерація матриць
-    std::vector<std::vector<double>> MA = data->generateRandomMatrix();
-    std::vector<std::vector<double>> MG = data->generateRandomMatrix();
-    std::vector<std::vector<double>> MZ = data->generateRandomMatrix();
-    std::vector<std::vector<double>> ML = data->generateRandomMatrix();
+    // Генерація або введення матриць
+    std::vector<std::vector<double>> MA, MG, MZ, ML;
+
+    if (data->N == 3) {
+        // Введення з клавіатури для малих розмірів
+        MA = data->getMatrixFromConsole("MA");
+        MG = data->getMatrixFromConsole("MG");
+        MZ = data->getMatrixFromConsole("MZ");
+        ML = data->getMatrixFromConsole("ML");
+    } else {
+        // Випадкова генерація для великих розмірів
+        MA = data->generateRandomMatrix();
+        MG = data->generateRandomMatrix();
+        MZ = data->generateRandomMatrix();
+        ML = data->generateRandomMatrix();
+    }
 
     // F2: MK = MA*(MG*MZ) + TRANS(ML)
     auto MGMZ = data->multiplyMatrices(MG, MZ);

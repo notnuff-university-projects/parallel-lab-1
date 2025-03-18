@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <random>
+#include <string>
 
 enum class Mode {
     SmallNum,  // N = 3
@@ -21,9 +22,17 @@ public:
     std::vector<std::vector<double>> transposeMatrix(const std::vector<std::vector<double>>& matrix);
     std::vector<double> sortVector(const std::vector<double>& vec);
 
+
+    std::vector<double> getVector() const;
+    std::vector<std::vector<double>> getMatrix() const;
+
     // Функції для генерації випадкових даних
     std::vector<double> generateRandomVector() const;
     std::vector<std::vector<double>> generateRandomMatrix() const;
+
+    // Функції для введення даних з клавіатури
+    std::vector<double> getVectorFromConsole(const std::string& vectorName) const;
+    std::vector<std::vector<double>> getMatrixFromConsole(const std::string& matrixName) const;
 
     Mode mode;
     int N;  // Розмір векторів та матриць
