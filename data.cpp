@@ -6,19 +6,23 @@
 #include <limits>
 #include <pthread.h>
 
-Data::Data(Mode m) : mode(m), gen(rd()), dis(-100.0, 100.0) {
+Data::Data(Mode m) : mode(m), gen(rd()), dis(-100.0, 100.0), outputReady(false) {
     if (mode == Mode::SmallNum) {
         N = 3;
     } else if (mode == Mode::BigNum) {
         N = 1000;
     }
-    // Ініціалізація мютексу
+    // Ініціалізація мютексів та умовної змінної
     pthread_mutex_init(&inputMutex, nullptr);
+    pthread_mutex_init(&outputMutex, nullptr);
+    pthread_cond_init(&outputCondition, nullptr);
 }
 
 Data::~Data() {
-    // Звільнення мютексу
+    // Звільнення мютексів та умовної змінної
     pthread_mutex_destroy(&inputMutex);
+    pthread_mutex_destroy(&outputMutex);
+    pthread_cond_destroy(&outputCondition);
 }
 
 // Скалярний добуток двох векторів
@@ -144,5 +148,39 @@ std::vector<std::vector<double>> Data::getMatrixFromConsole(const std::string& m
     pthread_mutex_unlock(&inputMutex);
     
     return result;
+}
+
+void Data::printVector(const std::string& vectorName, const std::vector<double>& vec) const {
+    pthread_mutex_lock(&outputMutex);
+    std::cout << "\nРезультат " << vectorName << ":\n";
+    for (int i = 0; i < N; i++) {
+        std::cout << vectorName << "[" << i << "] = " << vec[i] << "\n";
+    }
+    outputReady = true;
+    pthread_cond_signal(&outputCondition);
+    pthread_mutex_unlock(&outputMutex);
+}
+
+void Data::printMatrix(const std::string& matrixName, const std::vector<std::vector<double>>& matrix) const {
+    pthread_mutex_lock(&outputMutex);
+    std::cout << "\nРезультат " << matrixName << ":\n";
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            std::cout << matrixName << "[" << i << "][" << j << "] = " << matrix[i][j] << "\t";
+        }
+        std::cout << "\n";
+    }
+    outputReady = true;
+    pthread_cond_signal(&outputCondition);
+    pthread_mutex_unlock(&outputMutex);
+}
+
+void Data::waitForOutput() const {
+    pthread_mutex_lock(&outputMutex);
+    while (!outputReady) {
+        pthread_cond_wait(&outputCondition, &outputMutex);
+    }
+    outputReady = false;
+    pthread_mutex_unlock(&outputMutex);
 }
 

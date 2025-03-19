@@ -1,50 +1,40 @@
 #include "f2.h"
 #include <iostream>
 
-F2::F2(Data* data) : data(data) {}
+F2::F2(Data* data) : TThread(), data(data) {}
 
 void F2::execute() {
-    // Генерація або введення матриць
-    std::vector<std::vector<double>> MA, MG, MZ, ML;
+    // Чекаємо на завершення F1
+    data->waitForOutput();
+
+    std::vector<std::vector<double>> MB, MC, MD;
+    std::vector<double> A;
 
     if (data->N == 3) {
+        // Виведення тексту про поточну функцію
         pthread_mutex_lock(&data->inputMutex);
         std::cout << "\nВведення F2:\n";
         pthread_mutex_unlock(&data->inputMutex);
 
-        // Введення з клавіатури для малих розмірів
-        MA = data->getMatrixFromConsole("MA");
-        MG = data->getMatrixFromConsole("MG");
-        MZ = data->getMatrixFromConsole("MZ");
-        ML = data->getMatrixFromConsole("ML");
+        // Введення даних з клавіатури
+        MB = data->getMatrixFromConsole("MB");
+        MC = data->getMatrixFromConsole("MC");
+        MD = data->getMatrixFromConsole("MD");
+        A = data->getVectorFromConsole("A");
     } else {
-        // Випадкова генерація для великих розмірів
-        MA = data->generateRandomMatrix();
-        MG = data->generateRandomMatrix();
-        MZ = data->generateRandomMatrix();
-        ML = data->generateRandomMatrix();
+        // Генерація випадкових даних
+        MB = data->generateRandomMatrix();
+        MC = data->generateRandomMatrix();
+        MD = data->generateRandomMatrix();
+        A = data->generateRandomVector();
     }
 
-    // F2: MK = MA*(MG*MZ) + TRANS(ML)
-    auto MGMZ = data->multiplyMatrices(MG, MZ);
-    auto MA_MGMZ = data->multiplyMatrices(MA, MGMZ);
-    auto ML_TRANS = data->transposeMatrix(ML);
-
-    // Результат - матриця
-    result = std::vector<std::vector<double>>(data->N, std::vector<double>(data->N));
-    for (int i = 0; i < data->N; ++i) {
-        for (int j = 0; j < data->N; ++j) {
-            result[i][j] = MA_MGMZ[i][j] + ML_TRANS[i][j];
-        }
-    }
-
+    // Обчислення F2
+    std::vector<std::vector<double>> result = data->multiplyMatrices(
+        data->multiplyMatrices(MB, MC),
+        data->multiplyMatrices(MD, data->transposeMatrix(MD))
+    );
+    
     // Виведення результату
-    std::cout << "\nРезультат F2 (матриця MK):\n";
-    for (int i = 0; i < data->N; ++i) {
-        for (int j = 0; j < data->N; ++j) {
-            std::cout << "MK[" << i << "][" << j << "] = " << result[i][j] << "\t";
-        }
-        std::cout << "\n";
-    }
-    std::cout << std::endl;
+    data->printMatrix("MK", result);
 } 

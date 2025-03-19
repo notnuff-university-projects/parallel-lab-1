@@ -1,7 +1,7 @@
 #include "f1.h"
 #include <iostream>
 
-F1::F1(Data* data) : data(data) {}
+F1::F1(Data* data) : TThread(), data(data) {}
 
 void F1::execute() {
     // Генерація або введення векторів та матриць
@@ -42,9 +42,5 @@ void F1::execute() {
     }
 
     // Виведення результату
-    std::cout << "\nРезультат F1 (вектор d):\n";
-    for (int i = 0; i < data->N; ++i) {
-        std::cout << "d[" << i << "] = " << result[i] << "\n";
-    }
-    std::cout << std::endl;
+    data->printVector("d", result);
 }

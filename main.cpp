@@ -68,7 +68,7 @@ int main() {
 
 
     // Виведення результатів
-    std::cout << "\nLaboratory Work 1.3 Done";
+    std::cout << "\nLaboratory Work 1.2 Done";
     std::cout << "\nExecutionTime: " << duration.count() << " ms" << std::endl;
 
     return 0;
