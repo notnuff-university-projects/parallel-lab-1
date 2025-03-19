@@ -9,6 +9,7 @@ void F1::execute() {
     std::vector<std::vector<double>> MA, ME;
 
     if (data->N == 3) {
+        // Виведення тексту про поточну функцію
         pthread_mutex_lock(&data->inputMutex);
         std::cout << "\nВведення F1:\n";
         pthread_mutex_unlock(&data->inputMutex);
@@ -36,11 +37,13 @@ void F1::execute() {
     auto B_MA_ME = data->multiplyMatrixVector(MA_ME, B);
     double C_B_MA_ME = data->vectorDotProduct(C, B_MA_ME);
 
-    result = std::vector<double>(data->N);
-    for (int i = 0; i < data->N; ++i) {
-        result[i] = BC + AB + C_B_MA_ME;
-    }
+    double result = BC + AB + C_B_MA_ME;
 
     // Виведення результату
-    data->printVector("d", result);
+    pthread_mutex_lock(&data->outputMutex);
+    std::cout << "\nРезультат F1 (скаляр d):\n";
+    std::cout << "d = " << result << "\n";
+    data->outputReady = true;
+    pthread_cond_signal(&data->outputCondition);
+    pthread_mutex_unlock(&data->outputMutex);
 }

@@ -38,6 +38,7 @@ public:
     // Функції для синхронізованого виводу
     void printVector(const std::string& vectorName, const std::vector<double>& vec) const;
     void printMatrix(const std::string& matrixName, const std::vector<std::vector<double>>& matrix) const;
+    void printShortenMatrix(const std::string& matrixName, const std::vector<std::vector<double>>& matrix) const;
     void waitForOutput() const;
 
     Mode mode;
@@ -52,7 +53,7 @@ private:
     // Генератор випадкових чисел
     mutable std::random_device rd;
     mutable std::mt19937 gen;
-    mutable std::uniform_real_distribution<double> dis;
+    mutable std::uniform_int_distribution<int> dis;
 };
 
 #endif //DATA_H

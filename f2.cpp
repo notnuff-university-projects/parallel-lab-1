@@ -4,9 +4,6 @@
 F2::F2(Data* data) : TThread(), data(data) {}
 
 void F2::execute() {
-    // Чекаємо на завершення F1
-    data->waitForOutput();
-
     std::vector<std::vector<double>> MB, MC, MD;
     std::vector<double> A;
 
