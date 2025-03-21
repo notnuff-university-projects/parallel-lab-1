@@ -48,6 +48,11 @@ int main() {
 
     auto startTime = std::chrono::high_resolution_clock::now();
 
+    // Виставлення пріоритетності потоків
+    f1.setPriority(2);
+    f2.setPriority(1);
+    f3.setPriority(0);
+
     // Запуск потоків
     f1.start();
     f2.start();

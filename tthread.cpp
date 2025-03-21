@@ -1,6 +1,7 @@
 #include "tthread.h"
+#include <sys/resource.h>
 
-TThread::TThread() : running(false) {}
+TThread::TThread() : running(false), currentPriority(0) {}
 
 TThread::~TThread() {
     if (running) {
@@ -26,4 +27,17 @@ void TThread::join() {
         pthread_join(thread, nullptr);
         running = false;
     }
+}
+
+bool TThread::setPriority(int priority) {
+    if (priority < -20 || priority > 19) {
+        return false;
+    }
+    
+    if (pthread_setschedprio(thread, priority) != 0) {
+        return false;
+    }
+    
+    currentPriority = priority;
+    return true;
 } 

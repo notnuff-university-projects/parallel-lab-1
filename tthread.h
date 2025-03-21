@@ -15,6 +15,8 @@ public:
     void join();
     // Перевірка чи потік запущений
     bool isRunning() const { return running; }
+    // Встановлення пріоритету потоку
+    bool setPriority(int priority);
 
 protected:
     // Чиста віртуальна функція, яку мають реалізувати нащадки
@@ -23,6 +25,7 @@ protected:
 private:
     pthread_t thread;
     bool running;
+    int currentPriority;
 
     // Статична функція для запуску потоку
     static void* threadFunction(void* arg);
